@@ -74,7 +74,6 @@ button:focus-visible {
 @import 'tailwindcss';
 
 :root {
-
   --radius: 0.625rem;
 
   --background: oklch(1 0 0);
@@ -141,7 +140,6 @@ button:focus-visible {
 }
 
 .dark {
-
   --background: oklch(0.145 0 0);
 
   --foreground: oklch(0.985 0 0);
@@ -206,7 +204,6 @@ button:focus-visible {
 }
 
 @theme inline {
-
   --radius-sm: calc(var(--radius) - 4px);
 
   --radius-md: calc(var(--radius) - 2px);
@@ -276,6 +273,21 @@ button:focus-visible {
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@theme {
+  --color-pantone-2191C-50: oklch(99% 0.188 276);
+  --color-pantone-2191C-500: oklch(67.79316783443463% 0.18 247.35191674407446);
+
+  --color-pantone-388C-500: oklch(91.2533055106509% 0.209 116.52556812803351);
+
+  --color-pantone-2765C-500: oklch(17.315045974298062% 0.103 282.9047781295461);
+
+  --color-pantone-2745C-500: oklch(32.208479176869545% 0.112 284.9966179496888);
+
+  --color-pantone-1575C-500: oklch(72.33845963118223% 0.175 50.49964542359646);
+
+  --color-pantone-gray-500: oklch(97.91293560100793% 0 0);
 }
 
 @layer base {

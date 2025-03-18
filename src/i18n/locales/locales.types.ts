@@ -3,5 +3,18 @@ export enum LocaleFilename {
 }
 
 export interface LoginNamespace {
-  test: string;
+  welcome: {
+    label: string;
+    description: string;
+  };
+  loginForm: {
+    email: {
+      title: string;
+      placeholder: string;
+    };
+    password: string;
+    forgotPassword: string;
+    enter: string;
+    serviceTerms: string;
+  };
 }
