@@ -13,8 +13,8 @@ const Login: LoginNamespace = {
     password: 'Password',
     forgotPassword: 'Forgot your password?',
     enter: 'Login',
-    serviceTerms: 'By logging in, you agree to our terms of service.',
   },
+  serviceTerms: 'By logging in, you agree to our terms of service.',
 };
 
 export default Login;

@@ -15,6 +15,6 @@ export interface LoginNamespace {
     password: string;
     forgotPassword: string;
     enter: string;
-    serviceTerms: string;
   };
+  serviceTerms: string;
 }

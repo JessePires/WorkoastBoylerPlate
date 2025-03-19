@@ -16,8 +16,8 @@ const Login = (): JSX.Element => {
       {(containerProps: LoginContainerArgs): JSX.Element => {
         return (
           <div className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-100">
-            <div className="bg-white rounded-xl w-1/3">
-              <div className="items-center flex flex-col bg-pantone-2191C-500 rounded-t-xl p-10 ">
+            <div className="bg-white rounded-xl w-1/3 flex flex-col items-center pb-10">
+              <div className="items-center flex flex-col w-[100%] bg-pantone-2191C-500 rounded-t-xl p-10">
                 <h1 className="text-white text-3xl font-medium mb-6">{t('login.welcome.label')}</h1>
                 <h2 className="text-gray-100 text-sm">{t('login.welcome.description')}</h2>
               </div>
@@ -25,7 +25,7 @@ const Login = (): JSX.Element => {
               <Form {...containerProps.form}>
                 <form
                   onSubmit={containerProps.form.handleSubmit(containerProps.actions.onSubmit)}
-                  className="space-y-8 pt-12 flex flex-col items-center pl-8 pr-8 pb-8"
+                  className="space-y-8 pt-12 flex flex-col items-center pl-8 pr-8 pb-8 w-[100%]"
                 >
                   <FormField
                     control={containerProps.form.control}
@@ -47,6 +47,8 @@ const Login = (): JSX.Element => {
                   </Button>
                 </form>
               </Form>
+
+              <span className="text-gray-500">{t('login.serviceTerms')}</span>
             </div>
           </div>
         );
