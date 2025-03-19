@@ -16,7 +16,7 @@ const Login = (): JSX.Element => {
       {(containerProps: LoginContainerArgs): JSX.Element => {
         return (
           <div className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-100">
-            <div className="bg-white rounded-xl w-1/3 flex flex-col items-center pb-10">
+            <div className="bg-white rounded-xl w-1/3 flex flex-col items-center pb-10 shadow-xl">
               <div className="items-center flex flex-col w-[100%] bg-pantone-2191C-500 rounded-t-xl p-10">
                 <h1 className="text-white text-3xl font-medium mb-6">{t('login.welcome.label')}</h1>
                 <h2 className="text-gray-100 text-sm">{t('login.welcome.description')}</h2>

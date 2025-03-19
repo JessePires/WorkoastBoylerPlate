@@ -1,8 +1,9 @@
-import { JSX } from 'react';
+import { JSX, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Path } from './@common/constants/paths';
-import Main from './pages/main/main.component';
 import Login from './pages/login/login.component';
+
+const Main = lazy(() => import('./pages/main/main.component'));
 
 const AppRoutes = (): JSX.Element => {
   const location = useLocation();
@@ -15,8 +16,8 @@ const AppRoutes = (): JSX.Element => {
 
   return (
     <Routes>
-      <Route path={Path.LOGIN} element={<Login />} />
       <Route path={Path.MAIN} element={<Main />} />
+      <Route path={Path.LOGIN} element={<Login />} />
     </Routes>
   );
 };
