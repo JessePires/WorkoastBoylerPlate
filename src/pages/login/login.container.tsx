@@ -13,10 +13,7 @@ export const LoginContainer = (props: ContainerWithProps<LoginContainerArgs>): J
 
   const onSubmit = async (data: FieldValues): Promise<void> => {
     try {
-      const authenticateResponse = await authContext.actions.authenticate({
-        email: data.email,
-        password: data.password,
-      });
+      const authenticateResponse = await authContext.actions?.authenticate(data.username, data.password);
 
       if (!authenticateResponse) {
         throw new Error(authenticateResponse);

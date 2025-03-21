@@ -22,6 +22,8 @@ export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Elemen
     try {
       const data = await authController.authenticate({ email, password });
 
+      console.log({ email, password });
+
       if (data.email) {
         setIsAuthenticated(true);
         setUserData(data);
