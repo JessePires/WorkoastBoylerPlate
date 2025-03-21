@@ -1,4 +1,4 @@
-import { ContextType } from 'react';
+import { ContextType } from './context.types';
 
 export type AuthContextProviderProps = {
   children: React.ReactNode;
