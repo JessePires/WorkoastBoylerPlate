@@ -7,18 +7,26 @@ export const AuthContext = createContext<AuthContextValues>({});
 export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Element => {
   const authController = new AuthenticationController();
 
-  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>();
+  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(false);
   const [userData, setUserData] = useState();
+
+  console.log('isAuthenticated', isAuthenticated);
 
   const authenticate = async (email: string, password: string): Promise<void> => {
     try {
       const data = await authController.authenticate({ email, password });
 
+      console.log('aqui', data);
+
       if (data.email) {
         setIsAuthenticated(true);
         setUserData(data);
       }
+
+      return data;
     } catch (error) {
+      console.log('error', error);
+
       setIsAuthenticated(false);
     }
   };
