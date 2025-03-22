@@ -1,4 +1,4 @@
 export enum Path {
-  MAIN = '/',
+  DASHBOARD = '/',
   LOGIN = '/login',
 }

@@ -1,4 +1,3 @@
-import { LoginSchema } from '@/joi/login.schema';
 import { AuthenticationService } from './authentication.service';
 
 export class AuthenticationController {
