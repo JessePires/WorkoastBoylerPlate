@@ -17,4 +17,9 @@ export interface LoginNamespace {
     enter: string;
   };
   serviceTerms: string;
+  errors: {
+    emptyEmail: string;
+    invalidEmail: string;
+    emptyPassword: string;
+  };
 }

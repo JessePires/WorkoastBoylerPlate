@@ -15,6 +15,11 @@ const Login: LoginNamespace = {
     enter: 'Login',
   },
   serviceTerms: 'By logging in, you agree to our terms of service.',
+  errors: {
+    emptyEmail: 'Please enter an email.',
+    invalidEmail: 'Invalid email!',
+    emptyPassword: 'Please enter a password.',
+  },
 };
 
 export default Login;

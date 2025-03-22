@@ -29,19 +29,24 @@ const Login = (): JSX.Element => {
                 >
                   <FormField
                     control={containerProps.form.control}
-                    name="username"
+                    name="email"
                     render={({ field }) => (
                       <FormItem className="w-[100%]">
                         <FormLabel>{t('login.loginForm.email.title')}</FormLabel>
                         <FormControl>
-                          <Input className="h-10" placeholder={t('login.loginForm.email.placeholder')} {...field} />
+                          <Input
+                            className="h-10"
+                            {...containerProps.form.register('email')}
+                            placeholder={t('login.loginForm.email.placeholder')}
+                            {...field}
+                          />
                         </FormControl>
 
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <PasswordInput form={containerProps.form} />
+                  <PasswordInput {...containerProps.form.register('email')} form={containerProps.form} />
                   <Button className="bg-pantone-2191C-500 w-[100%] h-12" type="submit">
                     {t('login.loginForm.enter')}
                   </Button>

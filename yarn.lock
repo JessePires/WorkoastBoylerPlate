@@ -767,6 +767,13 @@
   dependencies:
     csstype "^3.0.2"
 
+"@types/tlds@^1.207.0":
+  version "1.207.0"
+  resolved "https://registry.yarnpkg.com/@types/tlds/-/tlds-1.207.0.tgz#e92d0b6e3d47446bfd454ebef67348441b468882"
+  integrity sha512-BJvPQBTpTxhma0+RmPTybZXQ/+Kgcxo9v7vuxXhxYt7PSl6AIP8ufk5leHOmk0SFoCKjoF4o1eSjezP7j2+Hzg==
+  dependencies:
+    tlds "*"
+
 "@typescript-eslint/eslint-plugin@8.26.1":
   version "8.26.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-8.26.1.tgz#3e48eb847924161843b092c87a9b65176b53782f"
@@ -2008,6 +2015,11 @@ tapable@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.2.1.tgz#1967a73ef4060a82f12ab96af86d52fdb76eeca0"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
+
+tlds@*, tlds@^1.256.0:
+  version "1.256.0"
+  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.256.0.tgz#4285b41a7ed4fcc7c5eed8516c3a180e892fad36"
+  integrity sha512-ZmyVB9DAw+FFTmLElGYJgdZFsKLYd/I59Bg9NHkCGPwAbVZNRilFWDMAdX8UG+bHuv7kfursd5XGqo/9wi26lA==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
