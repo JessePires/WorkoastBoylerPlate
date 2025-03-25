@@ -22,13 +22,14 @@ export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Elemen
     try {
       const data = await authController.authenticate({ email, password });
 
-      console.log({ email, password });
-
-      if (data.email) {
+      if (data.data) {
         setIsAuthenticated(true);
-        setUserData(data);
-        localStorage.setItem(StorageKeys.JWT_TOKEN, 'fslkfjslkds');
-        localStorage.setItem(StorageKeys.USER, JSON.stringify({ email: data.email }));
+        setUserData(data.data.user);
+        localStorage.setItem(StorageKeys.JWT_TOKEN, data.data.token);
+        localStorage.setItem(
+          StorageKeys.USER,
+          JSON.stringify({ email: data.data.user.email, name: data.data.user.name }),
+        );
       }
 
       return data;

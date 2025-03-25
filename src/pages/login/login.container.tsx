@@ -22,10 +22,8 @@ export const LoginContainer = (props: ContainerWithProps<LoginContainerArgs>): J
         throw new Error(authenticateResponse);
       }
 
-      navigate(Path.MAIN);
+      navigate(Path.DASHBOARD);
     } catch (error: any) {
-      console.log('error', error);
-
       if (error.details) {
         error.details.forEach((error: any) => {
           form.setError(error.path[0], { message: error.message });
