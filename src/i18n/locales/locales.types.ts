@@ -23,3 +23,15 @@ export interface LoginNamespace {
     emptyPassword: string;
   };
 }
+
+export interface DashboardNamespace {
+  pageHeader: {
+    pageTitle: string;
+    pageDescription: string;
+  };
+  card: {
+    priority: string;
+    status: string;
+    startCall: string;
+  };
+}

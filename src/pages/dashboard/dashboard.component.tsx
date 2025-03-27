@@ -1,42 +1,18 @@
-import CustomCard from '@/components/ui/customCard/customCard.component';
 import { JSX } from 'react';
-import * as Icons from '../../assets/icons';
-import { Button } from '@/components/ui/button';
+import CallCard from './components/callCard/callCard.component';
 
 const Dashboard = (): JSX.Element => {
-  const buildCardHeader = (): JSX.Element => {
-    return (
-      <div className="flex justify-between">
-        <h1 className="font-semibold">{`Call (Q4)`}</h1>
-        <span>Prioridade 1</span>
-      </div>
-    );
-  };
-
-  const buildRecentWorkboatHeader = (): JSX.Element => {
-    return (
-      <div className="border-b-2 flex flex-col items-center pb-2">
-        <h1 className="font-semibold">Call em andamento</h1>
-        <Button variant="ghost">Sair</Button>
-      </div>
-    );
-  };
-
-  const buildCardFooter = (): JSX.Element => {
-    return (
-      <div className="flex justify-between pt-2">
-        <Button className="px-6">
-          <span>Iniciar Ligação</span>
-        </Button>
-        <Button className="px-6 border-gray-300" variant="outline">
-          <span>Ver relatório</span>
-        </Button>
-      </div>
-    );
-  };
+  // const buildRecentWorkboatHeader = (): JSX.Element => {
+  //   return (
+  //     <div className="border-b-2 flex flex-col items-center pb-2">
+  //       <h1 className="font-semibold">Call em andamento</h1>
+  //       <Button variant="ghost">Sair</Button>
+  //     </div>
+  //   );
+  // };
 
   return (
-    <div className="w-[100%] h-screen flex flex-col bg-pantone-gray-500 p-8">
+    <div className="flex-col bg-pantone-gray-500 p-8">
       <div className="flex justify-between pb-8">
         <div className="flex flex-col">
           <h1 className="font-extrabold text-3xl">Dashboard Q4</h1>
@@ -48,46 +24,9 @@ const Dashboard = (): JSX.Element => {
         </div>
       </div>
       <div className="flex gap-8">
-        <CustomCard header={buildCardHeader()} footer={buildCardFooter()} cardStyle="w-[350px] flex flex-col">
-          <>
-            <div className="flex items-center gap-1">
-              <Icons.PhoneIcon />
-              <span>Entrevista</span>
-            </div>
-            <div className="flex gap-1 py-4">
-              <span>Status:</span>
-              <span className="font-medium text-gray-400">Pendente</span>
-            </div>
-          </>
-        </CustomCard>
-
-        <CustomCard header={buildCardHeader()} footer={buildCardFooter()} cardStyle="w-[350px] flex flex-col">
-          <>
-            <div className="flex items-center gap-1">
-              <Icons.PhoneIcon />
-              <span>Entrevista</span>
-            </div>
-            <div className="flex gap-1 py-4">
-              <span>Status:</span>
-              <span className="font-medium text-gray-400">Pendente</span>
-            </div>
-          </>
-        </CustomCard>
-
-        <CustomCard header={buildCardHeader()} footer={buildCardFooter()} cardStyle="w-[350px] flex flex-col">
-          <>
-            <div className="flex items-center gap-1">
-              <Icons.PhoneIcon />
-              <span>Entrevista</span>
-            </div>
-            <div className="flex gap-1 py-4">
-              <span>Status:</span>
-              <span className="font-medium text-gray-400">Pendente</span>
-            </div>
-          </>
-        </CustomCard>
+        <CallCard />
       </div>
-      <div className="flex flex-col items-center p-16">
+      {/* <div className="flex flex-col items-center p-16">
         <h1 className="text-3xl font-extrabold">Workboats Recentes</h1>
 
         <div className="pt-8">
@@ -118,7 +57,7 @@ const Dashboard = (): JSX.Element => {
             </>
           </CustomCard>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
