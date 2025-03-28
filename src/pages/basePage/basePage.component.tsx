@@ -4,44 +4,50 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Path } from '@/@common/constants/paths';
 import * as Icons from '../../assets/icons';
+import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import UserSettingsDropDown from './components/userSettings.component';
+import { cn } from '@/lib/utils';
+import { buttonStyle, containerPage, headerPage } from './basePage.styles';
 
 const BasePage = (props: BasePageProps): JSX.Element => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[100%] h-screen bg-pantone-gray-500">
+    <div className={cn(containerPage.base)}>
       {props.isAuthenticated && (
         <div className="flex-1">
-          <div className="bg-white h-18 flex items-center border-b-2 justify-between pl-2 pr-4">
+          <div className={cn(headerPage.base)}>
             <div className="flex items-center">
               <img src="/src/assets/workoastTextLogo.png" className="w-[150px] mr-4" />
-              <div className="flex gap-4">
-                <Button
-                  variant="ghost"
-                  className="hover:bg-white hover:text-pantone-2191C-500 p-0"
-                  onClick={() => navigate(Path.DASHBOARD)}
-                >
+              <div className={cn(headerPage.pageOptionsContainer)}>
+                <Button variant="ghost" className={cn(buttonStyle.base)} onClick={() => navigate(Path.DASHBOARD)}>
                   Dashboard
                 </Button>
-                <Button variant="ghost" className="hover:bg-white hover:text-pantone-2191C-500 p-0">
+                <Button variant="ghost" className={cn(buttonStyle.base)}>
                   Reuniões
                 </Button>
-                <Button variant="ghost" className="hover:bg-white hover:text-pantone-2191C-500 p-0">
+                <Button variant="ghost" className={cn(buttonStyle.base)}>
                   Workboats
                 </Button>
               </div>
             </div>
 
-            <div className="flex flex-row items-center gap-4">
-              <Button variant="outline" size="icon" className="rounded-3xl">
+            <div className={cn(headerPage.options)}>
+              <Button variant="outline" size="icon" className={cn(buttonStyle.rounded)}>
                 <Icons.BellIcon />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-3xl">
+              <Button variant="outline" size="icon" className={cn(buttonStyle.rounded)}>
                 <Icons.SettingsIcon />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-3xl">
-                <Icons.UserIcon />
-              </Button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className={cn(buttonStyle.rounded)}>
+                    <Icons.UserIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <UserSettingsDropDown />
+              </DropdownMenu>
             </div>
           </div>
           <Outlet />

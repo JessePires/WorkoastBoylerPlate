@@ -2,6 +2,8 @@ import { createContext, JSX, useState } from 'react';
 import { AuthContextActions, AuthContextProviderProps, AuthContextValues } from './auth.types';
 import { AuthenticationController } from '@/domain/authentication/authentication.controller';
 import { StorageKeys } from '@/@common/constants/storage';
+import { useNavigate } from 'react-router-dom';
+import { Path } from '@/@common/constants/paths';
 
 const getInitialValue = () => {
   const user = JSON.parse(localStorage.getItem(StorageKeys.USER) ?? '{}');
@@ -12,6 +14,8 @@ const getInitialValue = () => {
 export const AuthContext = createContext<AuthContextValues>({});
 
 export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Element => {
+  const navigate = useNavigate();
+
   const authController = new AuthenticationController();
   const initialValue = getInitialValue();
 
@@ -40,7 +44,15 @@ export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Elemen
     }
   };
 
-  const actions: AuthContextActions = { authenticate };
+  const logout = (): void => {
+    setIsAuthenticated(false);
+    localStorage.removeItem(StorageKeys.JWT_TOKEN);
+    localStorage.removeItem(StorageKeys.USER);
+
+    navigate(Path.LOGIN);
+  };
+
+  const actions: AuthContextActions = { authenticate, logout };
 
   return <AuthContext.Provider value={{ isAuthenticated, userData, actions }}>{props.children}</AuthContext.Provider>;
 };

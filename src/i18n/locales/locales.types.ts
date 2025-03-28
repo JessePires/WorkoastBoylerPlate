@@ -35,3 +35,10 @@ export interface DashboardNamespace {
     startCall: string;
   };
 }
+
+export interface BasePageNamespace {
+  userSettings: {
+    myAccount: string;
+    logout: string;
+  };
+}

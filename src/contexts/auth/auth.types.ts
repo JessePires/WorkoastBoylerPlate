@@ -11,6 +11,7 @@ export type AuthContextStates = {
 
 export type AuthContextActions = {
   authenticate: (email: string, password: string) => Promise<void>;
+  logout: () => void;
 };
 
 export type AuthContextValues = ContextType<AuthContextStates, AuthContextActions>;

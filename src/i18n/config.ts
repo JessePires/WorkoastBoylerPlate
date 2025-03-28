@@ -11,18 +11,21 @@ const resources = {
     translation: {
       login: en.Login,
       dashboard: en.Dashboard,
+      basePage: en.BasePage,
     },
   },
   es: {
     tranlation: {
       login: es.Login,
       dashboard: es.Dashboard,
+      basePage: es.BasePage,
     },
   },
   pt: {
     translation: {
       login: pt.Login,
       dashboard: pt.Dashboard,
+      basePage: pt.BasePage,
     },
   },
 };
