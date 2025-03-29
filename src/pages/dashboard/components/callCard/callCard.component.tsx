@@ -5,6 +5,8 @@ import * as Icons from '../../../../assets/icons';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Path } from '@/@common/constants/paths';
+import { cardHeaderStyle, cardStyle, footerStyle } from './callCard.styles';
+import { cn } from '@/lib/utils';
 
 const CallCard = (): JSX.Element => {
   const { t } = useTranslation();
@@ -12,8 +14,8 @@ const CallCard = (): JSX.Element => {
 
   const buildCardHeader = (): JSX.Element => {
     return (
-      <div className="flex justify-between">
-        <h1 className="font-semibold">{`Call (Q4)`}</h1>
+      <div className={cn(cardHeaderStyle.container)}>
+        <h1 className={cn(cardHeaderStyle.title)}>{`Call (Q4)`}</h1>
         <span>
           <Trans
             defaults={t('dashboard.card.priority', { priority: 1 })}
@@ -28,7 +30,7 @@ const CallCard = (): JSX.Element => {
 
   const buildCardFooter = (): JSX.Element => {
     return (
-      <div className="flex justify-center pt-2">
+      <div className={cn(footerStyle.container)}>
         <Button className="px-6" onClick={() => navigate(Path.CALL_PAGE)}>
           <span>{t('dashboard.card.startCall')}</span>
         </Button>
@@ -42,13 +44,13 @@ const CallCard = (): JSX.Element => {
   return (
     <CustomCard header={buildCardHeader()} footer={buildCardFooter()} cardStyle="w-[400px] flex flex-col">
       <>
-        <div className="flex items-center gap-1">
+        <div className={cn(cardStyle.header)}>
           <Icons.PhoneIcon />
           <span>Entrevista</span>
         </div>
-        <div className="flex items-center gap-1 py-4">
+        <div className={cn(cardStyle.info)}>
           <span>{t('dashboard.card.status')}:</span>
-          <span className="font-medium text-gray-400">Pendente</span>
+          <span className={cn(cardStyle.status)}>Pendente</span>
         </div>
       </>
     </CustomCard>

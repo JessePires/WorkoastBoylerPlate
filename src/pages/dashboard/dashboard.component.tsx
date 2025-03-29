@@ -1,5 +1,7 @@
 import { JSX } from 'react';
 import CallCard from './components/callCard/callCard.component';
+import { dashboardStyle } from './dashboard.styles';
+import { cn } from '@/lib/utils';
 
 const Dashboard = (): JSX.Element => {
   // const buildRecentWorkboatHeader = (): JSX.Element => {
@@ -12,13 +14,13 @@ const Dashboard = (): JSX.Element => {
   // };
 
   return (
-    <div className="flex-col bg-pantone-gray-500 p-8">
-      <div className="flex justify-between pb-8">
-        <div className="flex flex-col">
-          <h1 className="font-extrabold text-3xl">Dashboard Q4</h1>
+    <div className={cn(dashboardStyle.container)}>
+      <div className={cn(dashboardStyle.header)}>
+        <div className={cn(dashboardStyle.titleContainer)}>
+          <h1 className={cn(dashboardStyle.title)}>Dashboard Q4</h1>
           <span>Gerencie suas chamadas e prioridades</span>
         </div>
-        <div className="flex flex-col items-center">
+        <div className={cn(dashboardStyle.dateAndPriority)}>
           <span>10/03</span>
           <span className="font-bold">Prioridade 1</span>
         </div>
