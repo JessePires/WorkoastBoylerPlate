@@ -132,7 +132,7 @@ const CallPage = (): JSX.Element => {
                       />
 
                       <div className="flex justify-end">
-                        <Button className="bg-green-500">Finalizar Ligação</Button>
+                        <Button className="bg-green-500">{t('callPage.transcriptionCard.buttons.finishCall')}</Button>
                       </div>
                     </form>
                   </Form>
