@@ -8,33 +8,39 @@ import { t } from 'i18next';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { callPageStyle } from './callPage.style';
 
 const CallPage = (): JSX.Element => {
   return (
     <Containers.CallPageContainer>
       {(containerProps: CallPageContainerArgs): JSX.Element => {
         return (
-          <div className="flex flex-col w-[100%] items-center pt-10">
-            <h1 className="font-extrabold text-3xl pb-1">{`Workboat - Call (Q4)`}</h1>
-            <h2 className="text-gray-500">{`Gerencie sua ligação`}</h2>
+          <div className={callPageStyle.container}>
+            <h1 className={callPageStyle.title}>{t('callPage.pageTitle', { callName: 'Call Q4' })}</h1>
+            <h2 className={callPageStyle.subtitle}>{t('callPage.pageSubtitle')}</h2>
 
-            <div className="flex gap-8 pt-8 w-[100%] justify-center">
-              <CustomCard cardStyle="w-[35%]" header={<h1 className="font-[550] text-center text-l">Prompt</h1>}>
+            <div className={callPageStyle.cardsContainer}>
+              <CustomCard
+                cardStyle="w-[35%]"
+                header={<h1 className={callPageStyle.cardsTitle}>{t('callPage.promptCard.title')}</h1>}
+              >
                 <div className="w-[100%]">
-                  <Divider />
+                  <Divider className="bg-gray-300" />
                   <Form {...containerProps.form}>
                     <form
                       onSubmit={containerProps.form.handleSubmit(containerProps.actions.onSubmit)}
-                      className="flex flex-col gap-5 pt-8"
+                      className={callPageStyle.form}
                     >
                       <FormField
                         control={containerProps.form.control}
                         name="name"
                         render={({ field }) => (
-                          <FormItem className="w-[100%] flex flex-col items-center">
-                            <FormLabel className="text-gray-500">{`seu nome`}</FormLabel>
-                            <FormControl>
-                              <Input className="h-10 w-[]" {...containerProps.form.register('name')} {...field} />
+                          <FormItem>
+                            <FormLabel className={callPageStyle.formLabels}>
+                              {t('callPage.promptCard.formLabels.name')}
+                            </FormLabel>
+                            <FormControl className="w-[100%]">
+                              <Input className="h-10" {...containerProps.form.register('name')} {...field} />
                             </FormControl>
 
                             <FormMessage />
@@ -46,12 +52,13 @@ const CallPage = (): JSX.Element => {
                         control={containerProps.form.control}
                         name="phone"
                         render={({ field }) => (
-                          <FormItem className="w-[100%] flex flex-col items-center">
-                            <FormLabel className="text-gray-500">{`Telefone`}</FormLabel>
+                          <FormItem className="w-[100%]">
+                            <FormLabel className={callPageStyle.formLabels}>
+                              {t('callPage.promptCard.formLabels.phone')}
+                            </FormLabel>
                             <FormControl>
                               <Input className="h-10" {...containerProps.form.register('phone')} {...field} />
                             </FormControl>
-
                             <FormMessage />
                           </FormItem>
                         )}
@@ -61,22 +68,28 @@ const CallPage = (): JSX.Element => {
                         control={containerProps.form.control}
                         name="prompt"
                         render={({ field }) => (
-                          <FormItem className="w-[100%] flex flex-col items-center">
-                            <FormLabel className="text-gray-500">{'Prompt'}</FormLabel>
+                          <FormItem className="w-[100%]">
+                            <FormLabel className={callPageStyle.formLabels}>
+                              {t('callPage.promptCard.formLabels.prompt')}
+                            </FormLabel>
                             <FormControl>
-                              <Textarea className="h-10" {...containerProps.form.register('prompt')} {...field} />
+                              <Textarea
+                                className="h-60"
+                                cols={30}
+                                {...containerProps.form.register('prompt')}
+                                {...field}
+                              />
                             </FormControl>
-
                             <FormMessage />
                           </FormItem>
                         )}
                       />
 
-                      <div className="w-[100%] flex justify-between">
-                        <Button variant="outline">{'Cancelar'}</Button>
+                      <div className={callPageStyle.buttonsContainer}>
+                        <Button variant="outline">{t('callPage.promptCard.buttons.cancel')}</Button>
 
                         <Button type="submit" className="bg-green-500">
-                          {'Iniciar Ligação'}
+                          {t('callPage.promptCard.buttons.startCall')}
                         </Button>
                       </div>
                     </form>
@@ -84,27 +97,32 @@ const CallPage = (): JSX.Element => {
                 </div>
               </CustomCard>
 
-              <CustomCard cardStyle="w-[35%]" header={<h1 className="font-[550] text-center text-l">Transcrição</h1>}>
+              <CustomCard
+                cardStyle="w-[35%]"
+                header={<h1 className={callPageStyle.cardsTitle}>{t('callPage.transcriptionCard.title')}</h1>}
+              >
                 <div>
-                  <Divider />
+                  <Divider className="bg-gray-300" />
 
                   <Form {...containerProps.form}>
                     <form
                       onSubmit={containerProps.form.handleSubmit(containerProps.actions.onSubmit)}
-                      className="flex flex-col gap-5 pt-8"
+                      className={callPageStyle.form}
                     >
                       <FormField
                         control={containerProps.form.control}
-                        name="email"
+                        name="transcription"
                         render={({ field }) => (
                           <FormItem className="w-[100%] flex flex-col items-center">
-                            <FormLabel className="text-gray-500">{t('login.loginForm.email.title')}</FormLabel>
+                            <FormLabel className="text-gray-500">
+                              {t('callPage.transcriptionCard.formLabels.transcription')}
+                            </FormLabel>
                             <FormControl>
                               <Textarea
-                                className="h-30"
-                                {...containerProps.form.register('email')}
+                                {...containerProps.form.register('transcription')}
                                 {...field}
-                                rows={15}
+                                className="h-105"
+                                rows={60}
                               />
                             </FormControl>
 

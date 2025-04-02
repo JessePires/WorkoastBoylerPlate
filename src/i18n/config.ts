@@ -12,6 +12,7 @@ const resources = {
       login: en.Login,
       dashboard: en.Dashboard,
       basePage: en.BasePage,
+      callPage: en.CallPage,
     },
   },
   es: {
@@ -19,6 +20,7 @@ const resources = {
       login: es.Login,
       dashboard: es.Dashboard,
       basePage: es.BasePage,
+      callPage: es.CallPage,
     },
   },
   pt: {
@@ -26,6 +28,7 @@ const resources = {
       login: pt.Login,
       dashboard: pt.Dashboard,
       basePage: pt.BasePage,
+      callPage: pt.CallPage,
     },
   },
 };

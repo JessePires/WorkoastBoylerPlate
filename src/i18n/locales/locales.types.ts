@@ -42,3 +42,29 @@ export interface BasePageNamespace {
     logout: string;
   };
 }
+
+export interface CallPageNamespace {
+  pageTitle: string;
+  pageSubtitle: string;
+  promptCard: {
+    title: string;
+    formLabels: {
+      name: string;
+      phone: string;
+      prompt: string;
+    };
+    buttons: {
+      cancel: string;
+      startCall: string;
+    };
+  };
+  transcriptionCard: {
+    title: string;
+    formLabels: {
+      transcription: string;
+    };
+    buttons: {
+      finishCall: string;
+    };
+  };
+}
