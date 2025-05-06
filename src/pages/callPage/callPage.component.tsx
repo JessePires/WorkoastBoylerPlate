@@ -135,163 +135,33 @@
 
 import { Button } from '@/components/ui/button';
 import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
-import { useRef, useState } from 'react';
-
-function base64ToArrayBuffer(base64: string) {
-  const binaryString = atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes.buffer;
-}
+import * as Containers from './callPage.container';
+import { CallPageContainerArgs } from './callPage.types';
 
 const CallPage = () => {
-  const socketRef = useRef<WebSocket | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const processorRef = useRef<AudioWorkletNode | null>(null);
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [status, setStatus] = useState<string>('Aguardando');
-  const [transcription, setTranscription] = useState<string>('');
-
-  const playbackContextRef = useRef<AudioContext | null>(null);
-  const nextPlaybackTimeRef = useRef<number>(0);
-
-  const playDelta = (pcmBase64: string) => {
-    if (!pcmBase64) return;
-
-    const playbackContext = playbackContextRef.current;
-    if (!playbackContext) return;
-
-    const buffer = base64ToArrayBuffer(pcmBase64);
-    const int16Array = new Int16Array(buffer);
-    const float32Array = new Float32Array(int16Array.length);
-
-    for (let i = 0; i < int16Array.length; i++) {
-      float32Array[i] = int16Array[i] / 32768;
-    }
-
-    const audioBuffer = playbackContext.createBuffer(1, float32Array.length, 24000);
-    audioBuffer.copyToChannel(float32Array, 0);
-
-    const source = playbackContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(playbackContext.destination);
-
-    const now = playbackContext.currentTime;
-    const startAt = Math.max(nextPlaybackTimeRef.current, now + 0.1);
-
-    source.start(startAt);
-    nextPlaybackTimeRef.current = startAt + audioBuffer.duration;
-  };
-
-  const startCall = async () => {
-    if (isRecording) return;
-
-    playbackContextRef.current = new AudioContext({ sampleRate: 16000 });
-    nextPlaybackTimeRef.current = playbackContextRef.current.currentTime;
-
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new AudioContext({ sampleRate: 16000 });
-    audioContextRef.current = audioContext;
-
-    await audioContext.audioWorklet.addModule('/src/processor/pcmProcessor.js');
-
-    const source = audioContext.createMediaStreamSource(stream);
-    const pcmNode = new AudioWorkletNode(audioContext, 'pcm-processor');
-    processorRef.current = pcmNode as any;
-
-    const socket = new WebSocket('ws://localhost:3001/ws');
-    socket.binaryType = 'arraybuffer';
-    socketRef.current = socket;
-
-    socket.onopen = () => {
-      console.log('✅ WebSocket conectado');
-      setStatus('Conectado, aguardando sessão da OpenAI...');
-    };
-
-    socket.onmessage = (msg) => {
-      const parsed = JSON.parse(msg.data);
-      console.log('📩 Mensagem recebida:', parsed);
-
-      if (parsed.type === 'session.updated') {
-        console.log('🟢 Sessão da OpenAI ativa, iniciando transmissão de áudio');
-
-        pcmNode.port.onmessage = (event) => {
-          const pcmBuffer = event.data;
-          if (socket.readyState === WebSocket.OPEN) {
-            socket.send(pcmBuffer);
-          }
-        };
-
-        source.connect(pcmNode);
-        pcmNode.connect(audioContext.destination);
-
-        setIsRecording(true);
-        setStatus('Gravando...');
-      }
-
-      if (parsed.type === 'response.audio.delta') {
-        if (parsed.delta) {
-          playDelta(parsed.delta);
-        }
-      }
-
-      if (parsed.type === 'response.audio_transcript.done') {
-        setTranscription((prevState) => `${prevState} ${parsed.transcript}`);
-      }
-
-      if (parsed.type === 'response.create') {
-        console.log('🗣️ Resposta:', parsed.message?.content);
-      }
-    };
-
-    socket.onerror = (err) => {
-      console.error('❌ WebSocket erro:', err);
-      setStatus('Erro');
-    };
-
-    socket.onclose = () => {
-      console.log('🔴 WebSocket desconectado');
-      setIsRecording(false);
-      setStatus('Desconectado');
-
-      processorRef.current?.disconnect();
-      audioContextRef.current?.close();
-    };
-  };
-
-  const stopCall = () => {
-    playbackContextRef.current?.close();
-    playbackContextRef.current = null;
-
-    processorRef.current?.disconnect();
-    audioContextRef.current?.close();
-    socketRef.current?.close();
-
-    setIsRecording(false);
-    setStatus('Chamada encerrada');
-    setTranscription('');
-  };
-
   return (
-    <div style={{ padding: 20 }}>
-      <Button onClick={startCall} disabled={isRecording}>
-        {isRecording ? 'Chamando...' : 'Iniciar Chamada'}
-      </Button>
-      {isRecording && (
-        <Button variant="destructive" onClick={stopCall}>
-          Encerrar Chamada
-        </Button>
-      )}
-      <div>Status: {status}</div>
+    <Containers.CallPageContainer>
+      {(containerProps: CallPageContainerArgs): React.JSX.Element => {
+        return (
+          <div className="p-5">
+            <Button onClick={containerProps.actions.startCall} disabled={containerProps.isRecording}>
+              {containerProps.isRecording ? 'Chamando...' : 'Iniciar Chamada'}
+            </Button>
+            {containerProps.isRecording && (
+              <Button variant="destructive" onClick={containerProps.actions.stopCall}>
+                Encerrar Chamada
+              </Button>
+            )}
+            <div>Status: {containerProps.callStatus}</div>
 
-      <div className="pt-5">
-        <h1 className="text-xl font-bold">Transcrição</h1>
-        <TypeWriter text={transcription} delay={35} />
-      </div>
-    </div>
+            <div className="pt-5">
+              <h1 className="text-xl font-bold">Transcrição</h1>
+              <TypeWriter text={containerProps.transcription} delay={35} />
+            </div>
+          </div>
+        );
+      }}
+    </Containers.CallPageContainer>
   );
 };
 
