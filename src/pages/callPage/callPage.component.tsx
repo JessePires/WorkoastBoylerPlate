@@ -134,36 +134,73 @@
 // );
 
 import { Button } from '@/components/ui/button';
+import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
 import { useRef, useState } from 'react';
 
-const floatTo16BitPCM = (float32Array: Float32Array): ArrayBuffer => {
-  const buffer = new ArrayBuffer(float32Array.length * 2);
-  const view = new DataView(buffer);
-  let offset = 0;
-  for (let i = 0; i < float32Array.length; i++, offset += 2) {
-    let s = Math.max(-1, Math.min(1, float32Array[i]));
-    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+function base64ToArrayBuffer(base64: string) {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
   }
-  return buffer;
-};
+  return bytes.buffer;
+}
 
 const CallPage = () => {
   const socketRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
-  const processorRef = useRef<ScriptProcessorNode | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [status, setStatus] = useState('Aguardando');
+  const processorRef = useRef<AudioWorkletNode | null>(null);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>('Aguardando');
+  const [transcription, setTranscription] = useState<string>('');
+
+  const playbackContextRef = useRef<AudioContext | null>(null);
+  const nextPlaybackTimeRef = useRef<number>(0);
+
+  const playDelta = (pcmBase64: string) => {
+    if (!pcmBase64) return;
+
+    const playbackContext = playbackContextRef.current;
+    if (!playbackContext) return;
+
+    const buffer = base64ToArrayBuffer(pcmBase64);
+    const int16Array = new Int16Array(buffer);
+    const float32Array = new Float32Array(int16Array.length);
+
+    for (let i = 0; i < int16Array.length; i++) {
+      float32Array[i] = int16Array[i] / 32768;
+    }
+
+    const audioBuffer = playbackContext.createBuffer(1, float32Array.length, 24000);
+    audioBuffer.copyToChannel(float32Array, 0);
+
+    const source = playbackContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(playbackContext.destination);
+
+    const now = playbackContext.currentTime;
+    const startAt = Math.max(nextPlaybackTimeRef.current, now + 0.1);
+
+    source.start(startAt);
+    nextPlaybackTimeRef.current = startAt + audioBuffer.duration;
+  };
 
   const startCall = async () => {
     if (isRecording) return;
+
+    playbackContextRef.current = new AudioContext({ sampleRate: 16000 });
+    nextPlaybackTimeRef.current = playbackContextRef.current.currentTime;
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const audioContext = new AudioContext({ sampleRate: 16000 });
     audioContextRef.current = audioContext;
 
+    await audioContext.audioWorklet.addModule('/src/processor/pcmProcessor.js');
+
     const source = audioContext.createMediaStreamSource(stream);
-    const processor = audioContext.createScriptProcessor(1024, 1, 1);
-    processorRef.current = processor;
+    const pcmNode = new AudioWorkletNode(audioContext, 'pcm-processor');
+    processorRef.current = pcmNode as any;
 
     const socket = new WebSocket('ws://localhost:3001/ws');
     socket.binaryType = 'arraybuffer';
@@ -181,20 +218,28 @@ const CallPage = () => {
       if (parsed.type === 'session.updated') {
         console.log('🟢 Sessão da OpenAI ativa, iniciando transmissão de áudio');
 
-        processor.onaudioprocess = (e) => {
-          const inputData = e.inputBuffer.getChannelData(0); // mono
-          const pcmBuffer = floatTo16BitPCM(inputData);
-
+        pcmNode.port.onmessage = (event) => {
+          const pcmBuffer = event.data;
           if (socket.readyState === WebSocket.OPEN) {
             socket.send(pcmBuffer);
           }
         };
 
-        source.connect(processor);
-        processor.connect(audioContext.destination); // ou dummy output
+        source.connect(pcmNode);
+        pcmNode.connect(audioContext.destination);
 
         setIsRecording(true);
         setStatus('Gravando...');
+      }
+
+      if (parsed.type === 'response.audio.delta') {
+        if (parsed.delta) {
+          playDelta(parsed.delta);
+        }
+      }
+
+      if (parsed.type === 'response.audio_transcript.done') {
+        setTranscription((prevState) => `${prevState} ${parsed.transcript}`);
       }
 
       if (parsed.type === 'response.create') {
@@ -218,12 +263,16 @@ const CallPage = () => {
   };
 
   const stopCall = () => {
+    playbackContextRef.current?.close();
+    playbackContextRef.current = null;
+
     processorRef.current?.disconnect();
     audioContextRef.current?.close();
     socketRef.current?.close();
 
     setIsRecording(false);
     setStatus('Chamada encerrada');
+    setTranscription('');
   };
 
   return (
@@ -237,6 +286,11 @@ const CallPage = () => {
         </Button>
       )}
       <div>Status: {status}</div>
+
+      <div className="pt-5">
+        <h1 className="text-xl font-bold">Transcrição</h1>
+        <TypeWriter text={transcription} delay={35} />
+      </div>
     </div>
   );
 };
