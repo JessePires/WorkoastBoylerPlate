@@ -4,7 +4,7 @@ export interface CallPageContainerArgs {
   form: UseFormReturn<FieldValues, any, undefined>;
   isRecording: boolean;
   callStatus: string;
-  transcription: string;
+  transcription: Array<React.JSX.Element>;
   actions: {
     onSubmit: (data: FieldValues) => Promise<void>;
     startCall: () => Promise<void>;

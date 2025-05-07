@@ -3,6 +3,7 @@ import { JSX, useRef, useState } from 'react';
 
 import { FieldValues, useForm } from 'react-hook-form';
 import { CallPageContainerArgs } from './callPage.types';
+import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
 
 export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArgs>): JSX.Element => {
   const form = useForm();
@@ -15,7 +16,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
   const processorRef = useRef<AudioWorkletNode | null>(null);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [callStatus, setCallStatus] = useState<string>('Aguardando');
-  const [transcription, setTranscription] = useState<string>('');
+  const [transcription, setTranscription] = useState<Array<React.JSX.Element>>([]);
 
   const onSubmit = async (data: FieldValues): Promise<void> => {};
 
@@ -110,11 +111,27 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       }
 
       if (parsed.type === 'response.audio_transcript.done') {
-        setTranscription((prevState) => `${prevState} ${parsed.transcript}`);
+        setTranscription((prevState) => [
+          ...prevState,
+          <div>
+            <span>{'ENTREVISTADOR(A):'}</span>
+            <TypeWriter text={parsed.transcript} delay={35} />
+          </div>,
+        ]);
       }
 
       if (parsed.type === 'response.create') {
         console.log('🗣️ Resposta:', parsed.message?.content);
+      }
+
+      if (parsed.type === 'conversation.item.input_audio_transcription.completed') {
+        setTranscription((prevState) => [
+          ...prevState,
+          <div>
+            <span>{'USUÁRIO(A):'}</span>
+            <TypeWriter text={parsed.transcript} delay={35} />
+          </div>,
+        ]);
       }
     };
 
@@ -143,7 +160,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
     setIsRecording(false);
     setCallStatus('Chamada encerrada');
-    setTranscription('');
+    setTranscription([]);
   };
 
   return props.children({

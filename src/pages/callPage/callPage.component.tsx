@@ -134,7 +134,6 @@
 // );
 
 import { Button } from '@/components/ui/button';
-import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
 import * as Containers from './callPage.container';
 import { CallPageContainerArgs } from './callPage.types';
 
@@ -156,7 +155,7 @@ const CallPage = () => {
 
             <div className="pt-5">
               <h1 className="text-xl font-bold">Transcrição</h1>
-              <TypeWriter text={containerProps.transcription} delay={35} />
+              {containerProps.transcription.map((item) => item)}
             </div>
           </div>
         );
