@@ -113,7 +113,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'response.audio_transcript.done') {
         setTranscription((prevState) => [
           ...prevState,
-          <div>
+          <div className="w-[70%] flex justify-start">
             <span>{'ENTREVISTADOR(A):'}</span>
             <TypeWriter text={parsed.transcript} delay={35} />
           </div>,
@@ -127,7 +127,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'conversation.item.input_audio_transcription.completed') {
         setTranscription((prevState) => [
           ...prevState,
-          <div>
+          <div className="bg-red w-[70%] flex justify-end">
             <span>{'USUÁRIO(A):'}</span>
             <TypeWriter text={parsed.transcript} delay={35} />
           </div>,
