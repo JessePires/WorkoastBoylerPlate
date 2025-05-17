@@ -1,23 +1,27 @@
 import { ContainerWithProps } from '@/@common/types/container.type';
-import { JSX, useRef, useState } from 'react';
-
-import { FieldValues, useForm } from 'react-hook-form';
 import { CallPageContainerArgs } from './callPage.types';
-import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
-import { t } from 'i18next';
+import { FieldValues, useForm } from 'react-hook-form';
+import { useEffect, useRef, useState } from 'react';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { PersonTypeEnum } from '@/utils/enums/personType.enum';
+import { TranscriptionElement } from '@/components/ui/transcriptionCard/transcriptionCard.types';
 
-export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArgs>): JSX.Element => {
+export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArgs>): React.JSX.Element => {
   const form = useForm();
 
   const playbackContextRef = useRef<AudioContext | null>(null);
   const nextPlaybackTimeRef = useRef<number>(0);
 
   const socketRef = useRef<WebSocket | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const processorRef = useRef<AudioWorkletNode | null>(null);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [callStatus, setCallStatus] = useState<string>('Aguardando');
-  const [transcription, setTranscription] = useState<Array<React.JSX.Element>>([]);
+  const [transcription, setTranscription] = useState<Array<TranscriptionElement>>([]);
+  const transcriptedTextRef = useRef('');
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  console.log('transcription', transcription);
+
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const onSubmit = async (data: FieldValues): Promise<void> => {};
 
@@ -59,25 +63,17 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     nextPlaybackTimeRef.current = startAt + audioBuffer.duration;
   };
 
-  const startCall = async (): Promise<void> => {
-    if (isRecording) return;
+  const startCallText = async (): Promise<void> => {
+    if (!playbackContextRef.current || playbackContextRef.current.state === 'closed') {
+      playbackContextRef.current = new AudioContext({ sampleRate: 24000 });
+      nextPlaybackTimeRef.current = playbackContextRef.current.currentTime;
+    }
 
-    playbackContextRef.current = new AudioContext({ sampleRate: 16000 });
-    nextPlaybackTimeRef.current = playbackContextRef.current.currentTime;
+    await SpeechRecognition.startListening({ continuous: true });
 
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new AudioContext({ sampleRate: 16000 });
-    audioContextRef.current = audioContext;
-
-    await audioContext.audioWorklet.addModule('/src/processor/pcmProcessor.js');
-
-    const source = audioContext.createMediaStreamSource(stream);
-    const pcmNode = new AudioWorkletNode(audioContext, 'pcm-processor');
-    processorRef.current = pcmNode as any;
-
-    const websocketSocketURL = `${import.meta.env.VITE_WEBSOCKET_VOICE_API_ROUTE}?jobDescription=Engenheiro de Software&candidateName=Jessé&companyName=Workoast`;
-    const socket = new WebSocket(websocketSocketURL);
-    socket.binaryType = 'arraybuffer';
+    const socket = new WebSocket(
+      'ws://localhost:3001/ws?jobDescription=Engenheiro de Software&candidateName=Jessé&companyName=Workoast',
+    );
     socketRef.current = socket;
 
     socket.onopen = () => {
@@ -90,50 +86,32 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       console.log('📩 Mensagem recebida:', parsed);
 
       if (parsed.type === 'session.updated') {
-        console.log('🟢 Sessão da OpenAI ativa, iniciando transmissão de áudio');
-
-        pcmNode.port.onmessage = (event) => {
-          const pcmBuffer = event.data;
-          if (socket.readyState === WebSocket.OPEN) {
-            socket.send(pcmBuffer);
-          }
-        };
-
-        source.connect(pcmNode);
-        pcmNode.connect(audioContext.destination);
-
+        console.log('🟢 Sessão da OpenAI ativa, aguardando transcrição...');
         setIsRecording(true);
         setCallStatus('Gravando...');
       }
 
-      if (parsed.type === 'response.audio.delta') {
-        if (parsed.delta) {
-          playDelta(parsed.delta);
-        }
+      if (parsed.type === 'response.audio.delta' && parsed.delta) {
+        playDelta(parsed.delta);
       }
 
       if (parsed.type === 'response.audio_transcript.done') {
+        // setTranscription((prevState) => [
+        //   ...prevState,
+        //   <div className="w-[70%] flex gap-2 align-start align-self-start">
+        //     <span>{'ENTREVISTADOR(A):'}</span>
+        //     <TypeWriter text={parsed.transcript} delay={35} />
+        //   </div>,
+        // ]);
+
         setTranscription((prevState) => [
           ...prevState,
-          <div className="w-[70%] flex gap-2 align-start align-self-start">
-            <span>{t('callPage.transcriptionCard.peopleInvolved.interviwer')}</span>
-            <TypeWriter text={parsed.transcript} delay={35} />
-          </div>,
+          { person: PersonTypeEnum.INTERVIEWER, transcript: parsed.transcript },
         ]);
       }
 
       if (parsed.type === 'response.create') {
         console.log('🗣️ Resposta:', parsed.message?.content);
-      }
-
-      if (parsed.type === 'conversation.item.input_audio_transcription.completed') {
-        setTranscription((prevState) => [
-          ...prevState,
-          <div className="w-[70%] flex gap-2 self-end justify-end">
-            <span>{t('callPage.transcriptionCard.peopleInvolved.you')}</span>
-            <TypeWriter text={parsed.transcript} delay={35} />
-          </div>,
-        ]);
       }
     };
 
@@ -146,9 +124,6 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       console.log('🔴 WebSocket desconectado');
       setIsRecording(false);
       setCallStatus('Desconectado');
-
-      processorRef.current?.disconnect();
-      audioContextRef.current?.close();
     };
   };
 
@@ -156,23 +131,53 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     playbackContextRef.current?.close();
     playbackContextRef.current = null;
 
-    processorRef.current?.disconnect();
-    audioContextRef.current?.close();
     socketRef.current?.close();
-
     setIsRecording(false);
     setCallStatus('Chamada encerrada');
     setTranscription([]);
+    SpeechRecognition.stopListening();
   };
+
+  useEffect(() => {
+    transcriptedTextRef.current = transcript;
+
+    if (silenceTimeoutRef.current) {
+      clearTimeout(silenceTimeoutRef.current);
+    }
+
+    silenceTimeoutRef.current = setTimeout(() => {
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN && transcript.trim().length > 0) {
+        socketRef.current.send(JSON.stringify({ transcript: transcript.trim() }));
+        // setTranscription((prevState) => [
+        //   ...prevState,
+        //   <div className="w-[70%] flex gap-2 self-end justify-end pb-2">
+        //     <span>{'USUÁRIO(A):'}</span>
+        //     <TypeWriter text={transcript} delay={35} />
+        //   </div>,
+        // ]);
+        setTranscription((prevState) => [...prevState, { person: PersonTypeEnum.INTERVIEWEE, transcript }]);
+        resetTranscript();
+      }
+    }, 2000);
+
+    return () => {
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
+    };
+  }, [transcript]);
 
   return props.children({
     form,
     isRecording,
     callStatus,
     transcription,
+    transcript,
+    listening,
+    browserSupportsSpeechRecognition,
     actions: {
       onSubmit,
-      startCall,
+      startCallText,
       stopCall,
     },
   });

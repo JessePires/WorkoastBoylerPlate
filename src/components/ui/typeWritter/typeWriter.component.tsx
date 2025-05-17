@@ -5,7 +5,7 @@ const TypeWriter = (props: TypeWriterProps): React.JSX.Element => {
   return (
     <Containers.TypeWriterContainer {...props}>
       {(containerProps: TypeWriterContainerArgs) => {
-        return <p>{containerProps.currentText}</p>;
+        return <p className={`${props.className}`}>{containerProps.currentText}</p>;
       }}
     </Containers.TypeWriterContainer>
   );

@@ -1,13 +1,15 @@
+import { TranscriptionElement } from '@/components/ui/transcriptionCard/transcriptionCard.types';
 import { FieldValues, UseFormReturn } from 'react-hook-form';
 
 export interface CallPageContainerArgs {
   form: UseFormReturn<FieldValues, any, undefined>;
   isRecording: boolean;
   callStatus: string;
-  transcription: Array<React.JSX.Element>;
+  transcription: Array<TranscriptionElement>;
+  browserSupportsSpeechRecognition: boolean;
   actions: {
     onSubmit: (data: FieldValues) => Promise<void>;
-    startCall: () => Promise<void>;
+    startCallText: () => Promise<void>;
     stopCall: () => void;
   };
 }

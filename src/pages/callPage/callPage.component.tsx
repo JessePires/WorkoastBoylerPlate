@@ -136,28 +136,43 @@
 import { Button } from '@/components/ui/button';
 import * as Containers from './callPage.container';
 import { CallPageContainerArgs } from './callPage.types';
+import TranscriptonCard from '@/components/ui/transcriptionCard/transcriptionCard.component';
+import InfoDialog from './components/infoDialog/infoDialog.component';
 
 const CallPage = () => {
   return (
     <Containers.CallPageContainer>
       {(containerProps: CallPageContainerArgs): React.JSX.Element => {
         return (
-          <div className="p-5">
-            <Button onClick={containerProps.actions.startCall} disabled={containerProps.isRecording}>
-              {containerProps.isRecording ? 'Chamando...' : 'Iniciar Chamada'}
-            </Button>
-            {containerProps.isRecording && (
-              <Button variant="destructive" onClick={containerProps.actions.stopCall}>
-                Encerrar Chamada
-              </Button>
-            )}
-            <div>Status: {containerProps.callStatus}</div>
+          <div className="p-5 flex w-[100%] justify-center gap-10">
+            <div className="w-[45%]">
+              <h1 className="text-2xl font-medium ml-2 pb-3">Chamada</h1>
+              <div className="bg-white rounded-2xl shadow-sm h-[700px] flex flex-col justify-between items-center p-8">
+                <div className="font-bold text-[20px]">Status: {containerProps.callStatus}</div>
 
-            <div className="pt-5 w-[70%]">
-              <h1 className="text-xl font-bold">Transcrição</h1>
-              <div className="flex flex-col mt-5 p-5 gap-y-5 bg-white rounded-2xl shadow-xl">
-                {containerProps.transcription.map((item) => item)}
+                <div className="flex flex-row gap-4">
+                  <InfoDialog startCall={containerProps.actions.startCallText} />
+                  <Button
+                    variant="destructive"
+                    onClick={containerProps.actions.stopCall}
+                    disabled={!containerProps.isRecording}
+                  >
+                    Encerrar Chamada
+                  </Button>
+                </div>
               </div>
+            </div>
+
+            <div className="w-[45%]">
+              <h1 className="text-2xl font-medium ml-2 pb-3">Transcrição</h1>
+
+              <TranscriptonCard className="w-[100%] h-[700px] p-3" transcriptions={containerProps.transcription} />
+            </div>
+
+            <div>
+              {!containerProps.browserSupportsSpeechRecognition && (
+                <span>Browser doesn't support speech recognition.</span>
+              )}
             </div>
           </div>
         );
