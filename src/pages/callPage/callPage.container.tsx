@@ -4,6 +4,7 @@ import { JSX, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { CallPageContainerArgs } from './callPage.types';
 import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
+import { t } from 'i18next';
 
 export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArgs>): JSX.Element => {
   const form = useForm();
@@ -74,7 +75,8 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     const pcmNode = new AudioWorkletNode(audioContext, 'pcm-processor');
     processorRef.current = pcmNode as any;
 
-    const socket = new WebSocket('ws://localhost:3001/ws');
+    const websocketSocketURL = `${import.meta.env.VITE_WEBSOCKET_VOICE_API_ROUTE}?jobDescription=Engenheiro de Software&candidateName=Jessé&companyName=Workoast`;
+    const socket = new WebSocket(websocketSocketURL);
     socket.binaryType = 'arraybuffer';
     socketRef.current = socket;
 
@@ -113,8 +115,8 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'response.audio_transcript.done') {
         setTranscription((prevState) => [
           ...prevState,
-          <div className="w-[70%] flex justify-start">
-            <span>{'ENTREVISTADOR(A):'}</span>
+          <div className="w-[70%] flex gap-2 align-start align-self-start">
+            <span>{t('callPage.transcriptionCard.peopleInvolved.interviwer')}</span>
             <TypeWriter text={parsed.transcript} delay={35} />
           </div>,
         ]);
@@ -127,8 +129,8 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'conversation.item.input_audio_transcription.completed') {
         setTranscription((prevState) => [
           ...prevState,
-          <div className="bg-red w-[70%] flex justify-end">
-            <span>{'USUÁRIO(A):'}</span>
+          <div className="w-[70%] flex gap-2 self-end justify-end">
+            <span>{t('callPage.transcriptionCard.peopleInvolved.you')}</span>
             <TypeWriter text={parsed.transcript} delay={35} />
           </div>,
         ]);

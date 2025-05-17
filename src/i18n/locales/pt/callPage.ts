@@ -23,6 +23,10 @@ const CallPage: CallPageNamespace = {
     buttons: {
       finishCall: 'Finalizar Ligação',
     },
+    peopleInvolved: {
+      you: 'Você:',
+      interviwer: 'Entrevistador(a):',
+    },
   },
 };
 

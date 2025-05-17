@@ -153,9 +153,11 @@ const CallPage = () => {
             )}
             <div>Status: {containerProps.callStatus}</div>
 
-            <div className="pt-5 w-[100%] bg-red">
+            <div className="pt-5 w-[70%]">
               <h1 className="text-xl font-bold">Transcrição</h1>
-              {containerProps.transcription.map((item) => item)}
+              <div className="flex flex-col mt-5 p-5 gap-y-5 bg-white rounded-2xl shadow-xl">
+                {containerProps.transcription.map((item) => item)}
+              </div>
             </div>
           </div>
         );

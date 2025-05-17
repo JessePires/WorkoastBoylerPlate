@@ -66,5 +66,9 @@ export interface CallPageNamespace {
     buttons: {
       finishCall: string;
     };
+    peopleInvolved: {
+      you: string;
+      interviwer: string;
+    };
   };
 }
