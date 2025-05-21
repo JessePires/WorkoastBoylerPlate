@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import * as Icons from '../../../../assets/icons';
 
 import { JSX } from 'react';
 import { InfoDialogProps } from './infoDialog.types';
@@ -17,7 +18,10 @@ const InfoDialog = (props: InfoDialogProps): JSX.Element => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button>Iniciar Chamada</Button>
+        <Button className="w-50 bg-green-600">
+          <Icons.PhoneIcon color="stroke-white" />
+          <span>Iniciar Chamada</span>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

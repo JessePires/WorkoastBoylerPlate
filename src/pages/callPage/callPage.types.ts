@@ -7,6 +7,7 @@ export interface CallPageContainerArgs {
   callStatus: string;
   transcription: Array<TranscriptionElement>;
   browserSupportsSpeechRecognition: boolean;
+  isSpeaking: boolean;
   actions: {
     onSubmit: (data: FieldValues) => Promise<void>;
     startCallText: () => Promise<void>;

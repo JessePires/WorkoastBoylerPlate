@@ -19,39 +19,17 @@ const renderTrasncriptionMessage = (transcription: TranscriptionElement): JSX.El
 };
 
 const TranscriptonCard = (props: TranscriptionCardProps): JSX.Element => {
-  const transcriptionMock: Array<TranscriptionElement> = [
-    {
-      person: 'INTERVIEWEE',
-      transcript: 'boa noite',
-    },
-    {
-      person: 'INTERVIEWER',
-      transcript: 'Boa noite! Eu poderia falar com o Jessé, por favor?',
-    },
-    {
-      person: 'INTERVIEWEE',
-      transcript: 'sou eu mesmo',
-    },
-    {
-      person: 'INTERVIEWER',
-      transcript:
-        'Ótimo, Jessé! Meu nome é [Seu Nome], e estou ligando em nome da empresa Workoast sobre uma oportunidade para a posição de Engenheiro de Software. Antes de começarmos, gostaria de saber se você consente em gravarmos esta chamada para fins de qualidade. Tudo bem para você?',
-    },
-    {
-      person: 'INTERVIEWEE',
-      transcript: 'tudo bem Podemos sim',
-    },
-    {
-      person: 'INTERVIEWER',
-      transcript: 'Perfeito, muito obrigado! Vamos começar então. Jessé, por que você quer trabalhar na Workoast?',
-    },
-  ];
-
   return (
     <div className={cn('bg-white shadow-sm rounded-2xl', props.className)}>
-      <div className="h-full max-h-[100%] overflow-y-auto p-2 flex flex-col gap-2.5">
-        {transcriptionMock.map((element) => renderTrasncriptionMessage(element))}
-      </div>
+      {props.transcriptions.length > 0 ? (
+        <div className="h-full max-h-[100%] overflow-y-auto p-2 flex flex-col gap-2.5">
+          {props.transcriptions.map((element) => renderTrasncriptionMessage(element))}
+        </div>
+      ) : (
+        <div className="flex h-full justify-center items-center w-[45%] self-center justify-self-center">
+          <span className="text-2xl font-medium text-center text-gray-300">A transcrição será mostrada aqui</span>
+        </div>
+      )}
     </div>
   );
 };

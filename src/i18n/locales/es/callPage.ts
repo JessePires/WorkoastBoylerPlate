@@ -23,9 +23,9 @@ const CallPage: CallPageNamespace = {
     buttons: {
       finishCall: 'Finalizar Llamada',
     },
-    peopleInvolved: {
-      you: 'Tú:',
-      interviwer: 'Entrevistador(a):',
+    person: {
+      interviewer: 'Entrevistador(a)',
+      interviewee: 'Usted',
     },
   },
 };

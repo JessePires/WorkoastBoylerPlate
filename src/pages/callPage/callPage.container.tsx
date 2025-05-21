@@ -16,10 +16,9 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [callStatus, setCallStatus] = useState<string>('Aguardando');
   const [transcription, setTranscription] = useState<Array<TranscriptionElement>>([]);
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const transcriptedTextRef = useRef('');
   const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  console.log('transcription', transcription);
 
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
@@ -60,6 +59,10 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     const startAt = Math.max(nextPlaybackTimeRef.current, now + 0.1);
 
     source.start(startAt);
+
+    source.onended = () => {
+      setIsSpeaking(false);
+    };
     nextPlaybackTimeRef.current = startAt + audioBuffer.duration;
   };
 
@@ -92,6 +95,9 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       }
 
       if (parsed.type === 'response.audio.delta' && parsed.delta) {
+        if (!isSpeaking) {
+          setIsSpeaking(true);
+        }
         playDelta(parsed.delta);
       }
 
@@ -175,6 +181,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     transcript,
     listening,
     browserSupportsSpeechRecognition,
+    isSpeaking,
     actions: {
       onSubmit,
       startCallText,

@@ -139,25 +139,98 @@ import { CallPageContainerArgs } from './callPage.types';
 import TranscriptonCard from '@/components/ui/transcriptionCard/transcriptionCard.component';
 import InfoDialog from './components/infoDialog/infoDialog.component';
 
+import * as Icons from '../../assets/icons';
+
 const CallPage = () => {
   return (
     <Containers.CallPageContainer>
       {(containerProps: CallPageContainerArgs): React.JSX.Element => {
         return (
-          <div className="p-5 flex w-[100%] justify-center gap-10">
+          <div className="p-5 flex w-[100%] pt-13 justify-center gap-10">
             <div className="w-[45%]">
               <h1 className="text-2xl font-medium ml-2 pb-3">Chamada</h1>
               <div className="bg-white rounded-2xl shadow-sm h-[700px] flex flex-col justify-between items-center p-8">
                 <div className="font-bold text-[20px]">Status: {containerProps.callStatus}</div>
 
-                <div className="flex flex-row gap-4">
+                <div className="flex items-center justify-center h-[40px]">
+                  {containerProps.callStatus === 'Gravando...' ? (
+                    <div className="flex gap-1 items-end h-28">
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-100' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-300' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-200' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-500' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-400' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-100' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-300' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-200' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-500' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-400' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-100' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-300' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-200' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-500' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-400' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-100' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-300' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-200' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-500' : 'animate-none'}`}
+                      />
+                      <div
+                        className={`w-1.5 h-full bg-primary ${containerProps.isSpeaking ? 'animate-wave animation-delay-400' : 'animate-none'}`}
+                      />
+                    </div>
+                  ) : (
+                    <Icons.MicOffIcon color="stroke-gray-300" width="180" height="180" />
+                  )}
+                </div>
+
+                <div className="flex flex-row gap-4 h-">
                   <InfoDialog startCall={containerProps.actions.startCallText} />
                   <Button
                     variant="destructive"
                     onClick={containerProps.actions.stopCall}
                     disabled={!containerProps.isRecording}
+                    className="w-50"
                   >
-                    Encerrar Chamada
+                    <Icons.PhoneCallOff color="stroke-white" />
+                    <span>Encerrar Chamada</span>
                   </Button>
                 </div>
               </div>
