@@ -60,6 +60,7 @@ export interface CallPageNamespace {
   };
   transcriptionCard: {
     title: string;
+    emptyDescription: string;
     formLabels: {
       transcription: string;
     };
@@ -70,5 +71,26 @@ export interface CallPageNamespace {
       interviewer: string;
       interviewee: string;
     };
+  };
+  callCard: {
+    title: string;
+    startCall: string;
+    endCall: string;
+    instructions: {
+      title: string;
+      description: string;
+    };
+    cannotDoItNow: string;
+    start: string;
+    allowRecording: string;
+  };
+  callStatus: {
+    title: string;
+    waiting: string;
+    connecting: string;
+    connected: string;
+    disconnected: string;
+    error: string;
+    callClosed: string;
   };
 }

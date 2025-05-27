@@ -27,7 +27,9 @@ const TranscriptonCard = (props: TranscriptionCardProps): JSX.Element => {
         </div>
       ) : (
         <div className="flex h-full justify-center items-center w-[45%] self-center justify-self-center">
-          <span className="text-2xl font-medium text-center text-gray-300">A transcrição será mostrada aqui</span>
+          <span className="text-2xl font-medium text-center text-gray-300">
+            {t('callPage.transcriptionCard.emptyDescription')}
+          </span>
         </div>
       )}
     </div>

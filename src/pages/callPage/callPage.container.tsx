@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { PersonTypeEnum } from '@/utils/enums/personType.enum';
 import { TranscriptionElement } from '@/components/ui/transcriptionCard/transcriptionCard.types';
+import { CallStatusEnum } from '@/utils/enums/callStatus.enum';
 
 export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArgs>): React.JSX.Element => {
   const form = useForm();
@@ -14,7 +15,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
   const socketRef = useRef<WebSocket | null>(null);
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [callStatus, setCallStatus] = useState<string>('Aguardando');
+  const [callStatus, setCallStatus] = useState<CallStatusEnum>(CallStatusEnum.WAITING);
   const [transcription, setTranscription] = useState<Array<TranscriptionElement>>([]);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const transcriptedTextRef = useRef('');
@@ -72,7 +73,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       nextPlaybackTimeRef.current = playbackContextRef.current.currentTime;
     }
 
-    await SpeechRecognition.startListening({ continuous: true });
+    await SpeechRecognition.startListening({ continuous: true, language: 'pt' });
 
     const socket = new WebSocket(
       'ws://localhost:3001/ws?jobDescription=Engenheiro de Software&candidateName=Jessé&companyName=Workoast',
@@ -81,7 +82,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
     socket.onopen = () => {
       console.log('✅ WebSocket conectado');
-      setCallStatus('Conectado, aguardando sessão da OpenAI...');
+      setCallStatus(CallStatusEnum.WAITING);
     };
 
     socket.onmessage = (msg) => {
@@ -91,7 +92,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'session.updated') {
         console.log('🟢 Sessão da OpenAI ativa, aguardando transcrição...');
         setIsRecording(true);
-        setCallStatus('Gravando...');
+        setCallStatus(CallStatusEnum.CONNECTED);
       }
 
       if (parsed.type === 'response.audio.delta' && parsed.delta) {
@@ -102,14 +103,6 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       }
 
       if (parsed.type === 'response.audio_transcript.done') {
-        // setTranscription((prevState) => [
-        //   ...prevState,
-        //   <div className="w-[70%] flex gap-2 align-start align-self-start">
-        //     <span>{'ENTREVISTADOR(A):'}</span>
-        //     <TypeWriter text={parsed.transcript} delay={35} />
-        //   </div>,
-        // ]);
-
         setTranscription((prevState) => [
           ...prevState,
           { person: PersonTypeEnum.INTERVIEWER, transcript: parsed.transcript },
@@ -123,13 +116,13 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
     socket.onerror = (err) => {
       console.error('❌ WebSocket erro:', err);
-      setCallStatus('Erro');
+      setCallStatus(CallStatusEnum.ERROR);
     };
 
     socket.onclose = () => {
       console.log('🔴 WebSocket desconectado');
       setIsRecording(false);
-      setCallStatus('Desconectado');
+      setCallStatus(CallStatusEnum.DISCONNECTED);
     };
   };
 
@@ -139,7 +132,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
     socketRef.current?.close();
     setIsRecording(false);
-    setCallStatus('Chamada encerrada');
+    setCallStatus(CallStatusEnum.CALL_CLOSED);
     setTranscription([]);
     SpeechRecognition.stopListening();
   };
@@ -154,13 +147,6 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     silenceTimeoutRef.current = setTimeout(() => {
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN && transcript.trim().length > 0) {
         socketRef.current.send(JSON.stringify({ transcript: transcript.trim() }));
-        // setTranscription((prevState) => [
-        //   ...prevState,
-        //   <div className="w-[70%] flex gap-2 self-end justify-end pb-2">
-        //     <span>{'USUÁRIO(A):'}</span>
-        //     <TypeWriter text={transcript} delay={35} />
-        //   </div>,
-        // ]);
         setTranscription((prevState) => [...prevState, { person: PersonTypeEnum.INTERVIEWEE, transcript }]);
         resetTranscript();
       }
