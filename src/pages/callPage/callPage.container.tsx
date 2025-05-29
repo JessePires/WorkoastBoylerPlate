@@ -65,7 +65,12 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     playbackContextRef.current = new AudioContext({ sampleRate: 16000 });
     nextPlaybackTimeRef.current = playbackContextRef.current.currentTime;
 
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+      },
+    });
     const audioContext = new AudioContext({ sampleRate: 16000 });
     audioContextRef.current = audioContext;
 
@@ -75,7 +80,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     const pcmNode = new AudioWorkletNode(audioContext, 'pcm-processor');
     processorRef.current = pcmNode as any;
 
-    const websocketSocketURL = `${import.meta.env.VITE_WEBSOCKET_VOICE_API_ROUTE}?jobDescription=Engenheiro de Software&candidateName=Jessé&companyName=Workoast`;
+    const websocketSocketURL = `${import.meta.env.VITE_WEBSOCKET_VOICE_API_ROUTE}?jobDescription=Engenheiro de Software&candidateName=Jessé&companyName=Workoast&language=pt`;
     const socket = new WebSocket(websocketSocketURL);
     socket.binaryType = 'arraybuffer';
     socketRef.current = socket;
