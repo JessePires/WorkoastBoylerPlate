@@ -1,14 +1,12 @@
 import { ContainerWithProps } from '@/@common/types/container.type';
 import { JSX, useRef, useState } from 'react';
 
-import { FieldValues, useForm } from 'react-hook-form';
 import { CallPageContainerArgs } from './callPage.types';
-import TypeWriter from '@/components/ui/typeWritter/typeWriter.component';
-import { t } from 'i18next';
+import { TranscriptionElement } from '@/components/ui/transcriptionCard/transcriptionCard.types';
+import { PersonTypeEnum } from '@/utils/enums/personType.enum';
+import { CallStatusEnum } from '@/utils/enums/callStatus.enum';
 
 export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArgs>): JSX.Element => {
-  const form = useForm();
-
   const playbackContextRef = useRef<AudioContext | null>(null);
   const nextPlaybackTimeRef = useRef<number>(0);
 
@@ -16,10 +14,9 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
   const audioContextRef = useRef<AudioContext | null>(null);
   const processorRef = useRef<AudioWorkletNode | null>(null);
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [callStatus, setCallStatus] = useState<string>('Aguardando');
-  const [transcription, setTranscription] = useState<Array<React.JSX.Element>>([]);
-
-  const onSubmit = async (data: FieldValues): Promise<void> => {};
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [callStatus, setCallStatus] = useState<CallStatusEnum>(CallStatusEnum.WAITING);
+  const [transcription, setTranscription] = useState<Array<TranscriptionElement>>([]);
 
   const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
     const binaryString = atob(base64);
@@ -56,6 +53,9 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     const startAt = Math.max(nextPlaybackTimeRef.current, now + 0.1);
 
     source.start(startAt);
+    source.onended = () => {
+      setIsSpeaking(false);
+    };
     nextPlaybackTimeRef.current = startAt + audioBuffer.duration;
   };
 
@@ -87,7 +87,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
     socket.onopen = () => {
       console.log('✅ WebSocket conectado');
-      setCallStatus('Conectado, aguardando sessão da OpenAI...');
+      setCallStatus(CallStatusEnum.WAITING);
     };
 
     socket.onmessage = (msg) => {
@@ -108,11 +108,14 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
         pcmNode.connect(audioContext.destination);
 
         setIsRecording(true);
-        setCallStatus('Gravando...');
+        setCallStatus(CallStatusEnum.CONNECTED);
       }
 
       if (parsed.type === 'response.audio.delta') {
         if (parsed.delta) {
+          if (!isSpeaking) {
+            setIsSpeaking(true);
+          }
           playDelta(parsed.delta);
         }
       }
@@ -120,10 +123,7 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'response.audio_transcript.done') {
         setTranscription((prevState) => [
           ...prevState,
-          <div className="w-[70%] flex gap-2 align-start align-self-start">
-            <span>{t('callPage.transcriptionCard.peopleInvolved.interviwer')}</span>
-            <TypeWriter text={parsed.transcript} delay={35} />
-          </div>,
+          { person: PersonTypeEnum.INTERVIEWER, transcript: parsed.transcript },
         ]);
       }
 
@@ -134,23 +134,20 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
       if (parsed.type === 'conversation.item.input_audio_transcription.completed') {
         setTranscription((prevState) => [
           ...prevState,
-          <div className="w-[70%] flex gap-2 self-end justify-end">
-            <span>{t('callPage.transcriptionCard.peopleInvolved.you')}</span>
-            <TypeWriter text={parsed.transcript} delay={35} />
-          </div>,
+          { person: PersonTypeEnum.INTERVIEWEE, transcript: parsed.transcript },
         ]);
       }
     };
 
     socket.onerror = (err) => {
       console.error('❌ WebSocket erro:', err);
-      setCallStatus('Erro');
+      setCallStatus(CallStatusEnum.ERROR);
     };
 
     socket.onclose = () => {
       console.log('🔴 WebSocket desconectado');
       setIsRecording(false);
-      setCallStatus('Desconectado');
+      setCallStatus(CallStatusEnum.DISCONNECTED);
 
       processorRef.current?.disconnect();
       audioContextRef.current?.close();
@@ -166,17 +163,16 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
     socketRef.current?.close();
 
     setIsRecording(false);
-    setCallStatus('Chamada encerrada');
+    setCallStatus(CallStatusEnum.CALL_CLOSED);
     setTranscription([]);
   };
 
   return props.children({
-    form,
     isRecording,
     callStatus,
     transcription,
+    isSpeaking,
     actions: {
-      onSubmit,
       startCall,
       stopCall,
     },

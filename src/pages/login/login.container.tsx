@@ -18,9 +18,11 @@ export const LoginContainer = (props: ContainerWithProps<LoginContainerArgs>): J
 
       const authenticateResponse = await authContext.actions?.authenticate(data.email, data.password);
 
-      if (!authenticateResponse) {
-        throw new Error(authenticateResponse);
-      }
+      console.log('authenticateResponse', authenticateResponse);
+
+      // if (!authenticateResponse) {
+      //   throw new Error(authenticateResponse);
+      // }
 
       navigate(Path.DASHBOARD);
     } catch (error: any) {

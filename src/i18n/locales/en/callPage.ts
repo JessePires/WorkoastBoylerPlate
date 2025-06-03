@@ -17,16 +17,39 @@ const CallPage: CallPageNamespace = {
   },
   transcriptionCard: {
     title: 'Transcription',
+    emptyDescription: 'The transcription will be shown here',
     formLabels: {
       transcription: 'Transcription',
     },
     buttons: {
       finishCall: 'Finish Call',
     },
-    peopleInvolved: {
-      you: 'You:',
-      interviwer: 'Interviewer:',
+    person: {
+      interviewer: 'Interviewer',
+      interviewee: 'You',
     },
+  },
+  callCard: {
+    title: 'Call',
+    startCall: 'Start Call',
+    endCall: 'End Call',
+    instructions: {
+      title: 'Instructions',
+      description:
+        '<p>- Find a quiet and calm place for your interview.</p><p>- When the status is "Recording", say something to begin the interview.</p><p>- Be clear and precise in your answers.</p><p>- Avoid long pauses while speaking.</p>',
+    },
+    cannotDoItNow: 'Can’t do it now',
+    start: 'Start',
+    allowRecording: 'Allow call recording.',
+  },
+  callStatus: {
+    title: 'Status',
+    waiting: 'Waiting',
+    connecting: 'Connecting, please wait...',
+    connected: 'Connected',
+    disconnected: 'Disconnected',
+    error: 'Connection error',
+    callClosed: 'Call ended',
   },
 };
 

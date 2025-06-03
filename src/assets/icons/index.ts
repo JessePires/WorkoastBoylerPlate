@@ -5,3 +5,5 @@ export { default as PhoneIcon } from './phone';
 export { default as UserIcon } from './user';
 export { default as SettingsIcon } from './settings';
 export { default as BellIcon } from './bell';
+export { default as PhoneCallOff } from './phoneCallOff';
+export { default as MicOffIcon } from './micOff';

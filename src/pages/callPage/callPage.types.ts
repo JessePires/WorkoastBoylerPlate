@@ -1,12 +1,12 @@
-import { FieldValues, UseFormReturn } from 'react-hook-form';
+import { TranscriptionElement } from '@/components/ui/transcriptionCard/transcriptionCard.types';
+import { CallStatusEnum } from '@/utils/enums/callStatus.enum';
 
 export interface CallPageContainerArgs {
-  form: UseFormReturn<FieldValues, any, undefined>;
   isRecording: boolean;
-  callStatus: string;
-  transcription: Array<React.JSX.Element>;
+  callStatus: CallStatusEnum;
+  transcription: Array<TranscriptionElement>;
+  isSpeaking: boolean;
   actions: {
-    onSubmit: (data: FieldValues) => Promise<void>;
     startCall: () => Promise<void>;
     stopCall: () => void;
   };
