@@ -7,6 +7,8 @@ import BasePage from './pages/basePage/basePage.component';
 
 const Dashboard = lazy(() => import('./pages/dashboard/dashboard.component'));
 const CallPage = lazy(() => import('./pages/callPage/callPage.component'));
+const EnterprisesPage = lazy(() => import('./pages/enterprises/enterprises.component'));
+const JobsPage = lazy(() => import('./pages/jobs/jobs.component'));
 
 const AppRoutes = (): JSX.Element => {
   const location = useLocation();
@@ -23,6 +25,8 @@ const AppRoutes = (): JSX.Element => {
       <Route element={<BasePage isAuthenticated={Boolean(isAuthenticated)} />}>
         <Route path={Path.DASHBOARD} element={<Dashboard />} />
         <Route path={Path.CALL_PAGE} element={<CallPage />} />
+        <Route path={Path.ENTERPRISES} element={<EnterprisesPage />} />
+        <Route path={Path.JOBS} element={<JobsPage />} />
       </Route>
       <Route path={Path.LOGIN} element={<Login />} />
     </Routes>

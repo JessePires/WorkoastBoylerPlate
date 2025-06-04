@@ -19,6 +19,7 @@
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.14",
+    "@tanstack/react-table": "^8.21.3",
     "@types/tlds": "^1.207.0",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
@@ -37,6 +38,7 @@
     "tailwindcss": "^4.0.14",
     "tailwindcss-animate": "^1.0.7",
     "tlds": "^1.256.0",
+    "vaul": "^1.1.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
