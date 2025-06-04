@@ -17,16 +17,39 @@ const CallPage: CallPageNamespace = {
   },
   transcriptionCard: {
     title: 'Transcrição',
+    emptyDescription: 'A transcrição será mostrada aqui',
     formLabels: {
       transcription: 'Transcrição',
     },
     buttons: {
-      finishCall: 'Finalizar Ligação',
+      finishCall: 'Encerrar Chamada',
     },
-    peopleInvolved: {
-      you: 'Você:',
-      interviwer: 'Entrevistador(a):',
+    person: {
+      interviewer: 'Entrevistador(a)',
+      interviewee: 'Você',
     },
+  },
+  callCard: {
+    title: 'Chamada',
+    startCall: 'Iniciar Chamada',
+    endCall: 'Encerrar Chamada',
+    instructions: {
+      title: 'Instruções',
+      description:
+        '<p>- Procure um ambiente tranquilo e silencioso para a sua entrevista.</p><p>- Quando o status estiver em "Gravando" fale algo para iniciar a entrevista.</p><p>- Seja claro e preciso em suas repostas.</p><p>- Evite pausas longas durante a sua fala.</p>',
+    },
+    cannotDoItNow: 'Não posso agora',
+    start: 'Iniciar',
+    allowRecording: 'Permitir gravação da chamada.',
+  },
+  callStatus: {
+    title: 'Status',
+    waiting: 'Aguardando',
+    connecting: 'Conectando, por favor aguarde...',
+    connected: 'Conectado',
+    disconnected: 'Desconectado',
+    error: 'Erro de conexão',
+    callClosed: 'Chamada encerrada',
   },
 };
 

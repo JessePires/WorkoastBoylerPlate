@@ -29,7 +29,7 @@ export const LoginContainer = (props: ContainerWithProps<LoginContainerArgs>): J
           form.setError(error.path[0], { message: error.message });
         });
       } else {
-        console.log('else', error);
+        console.log('error', error);
       }
     }
   };
