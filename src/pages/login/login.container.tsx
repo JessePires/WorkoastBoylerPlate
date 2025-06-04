@@ -18,11 +18,9 @@ export const LoginContainer = (props: ContainerWithProps<LoginContainerArgs>): J
 
       const authenticateResponse = await authContext.actions?.authenticate(data.email, data.password);
 
-      console.log('authenticateResponse', authenticateResponse);
-
-      // if (!authenticateResponse) {
-      //   throw new Error(authenticateResponse);
-      // }
+      if (!authenticateResponse) {
+        throw new Error(authenticateResponse);
+      }
 
       navigate(Path.DASHBOARD);
     } catch (error: any) {
@@ -31,7 +29,7 @@ export const LoginContainer = (props: ContainerWithProps<LoginContainerArgs>): J
           form.setError(error.path[0], { message: error.message });
         });
       } else {
-        console.log('else', error);
+        console.log('error', error);
       }
     }
   };

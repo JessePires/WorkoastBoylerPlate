@@ -92,7 +92,6 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
 
     socket.onmessage = (msg) => {
       const parsed = JSON.parse(msg.data);
-      console.log('📩 Mensagem recebida:', parsed);
 
       if (parsed.type === 'session.updated') {
         console.log('🟢 Sessão da OpenAI ativa, iniciando transmissão de áudio');
@@ -125,10 +124,6 @@ export const CallPageContainer = (props: ContainerWithProps<CallPageContainerArg
           ...prevState,
           { person: PersonTypeEnum.INTERVIEWER, transcript: parsed.transcript },
         ]);
-      }
-
-      if (parsed.type === 'response.create') {
-        console.log('🗣️ Resposta:', parsed.message?.content);
       }
 
       if (parsed.type === 'conversation.item.input_audio_transcription.completed') {

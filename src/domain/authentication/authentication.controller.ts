@@ -5,7 +5,6 @@ export class AuthenticationController {
 
   public async authenticate(data: { email: string; password: string }): Promise<any> {
     const response = await this.service.authenticate(data);
-    console.log('AQUIIIII');
 
     return response;
   }
