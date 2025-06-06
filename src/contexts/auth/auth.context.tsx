@@ -4,6 +4,7 @@ import { AuthenticationController } from '@/domain/authentication/authentication
 import { StorageKeys } from '@/@common/constants/storage';
 import { useNavigate } from 'react-router-dom';
 import { Path } from '@/@common/constants/paths';
+import { setApiBearerToken } from '@/config/api.config';
 
 const getInitialValue = () => {
   const user = JSON.parse(localStorage.getItem(StorageKeys.USER) ?? '{}');
@@ -30,9 +31,14 @@ export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Elemen
         setIsAuthenticated(true);
         setUserData(data.data.user);
         localStorage.setItem(StorageKeys.JWT_TOKEN, data.data.token);
+        setApiBearerToken(data.data.token);
         localStorage.setItem(
           StorageKeys.USER,
-          JSON.stringify({ email: data.data.user.email, name: data.data.user.name }),
+          JSON.stringify({
+            email: data.data.user.email,
+            name: data.data.user.name,
+            permissionId: data.data.user.permission_id,
+          }),
         );
       }
 

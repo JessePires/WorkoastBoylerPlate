@@ -1,6 +1,5 @@
 import Joi from 'joi';
 import { GenericSchema } from './generic.schema';
-import { t } from 'i18next';
 
 export class LoginSchema extends GenericSchema {
   public static readonly login = Joi.object({

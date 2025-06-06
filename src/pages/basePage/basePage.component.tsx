@@ -29,6 +29,12 @@ const BasePage = (props: BasePageProps): JSX.Element => {
                 <Button variant="ghost" className={cn(buttonStyle.base)}>
                   Workboats
                 </Button>
+                <Button variant="ghost" className={cn(buttonStyle.base)} onClick={() => navigate(Path.ENTERPRISES)}>
+                  Empresas
+                </Button>
+                <Button variant="ghost" className={cn(buttonStyle.base)} onClick={() => navigate(Path.JOBS)}>
+                  Vagas
+                </Button>
               </div>
             </div>
 
