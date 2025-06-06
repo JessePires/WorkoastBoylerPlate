@@ -34,7 +34,11 @@ export const AuthContextProvider = (props: AuthContextProviderProps): JSX.Elemen
         setApiBearerToken(data.data.token);
         localStorage.setItem(
           StorageKeys.USER,
-          JSON.stringify({ email: data.data.user.email, name: data.data.user.name }),
+          JSON.stringify({
+            email: data.data.user.email,
+            name: data.data.user.name,
+            permissionId: data.data.user.permission_id,
+          }),
         );
       }
 
