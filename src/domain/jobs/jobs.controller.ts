@@ -1,5 +1,5 @@
-import { JobsService } from './enterprises.service';
-import { JobsDTO } from './enterprises.types';
+import { JobsService } from './jobs.service';
+import { JobsDTO } from './jobs.types';
 
 export class JobsController {
   private service = new JobsService();

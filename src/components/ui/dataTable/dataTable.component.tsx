@@ -23,7 +23,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 return (
                   <TableHead
                     key={header.id}
-                    className={`bg-gray-100 ${isFirst ? 'rounded-tl-md' : ''} ${isLast ? 'rounded-tr-md' : ''}`}
+                    className={`bg-gray-200 ${isFirst ? 'rounded-tl-md' : ''} ${isLast ? 'rounded-tr-md' : ''}`}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>

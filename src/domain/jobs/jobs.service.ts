@@ -1,5 +1,5 @@
 import api from '../../config/api.config';
-import { JobsDTO } from './enterprises.types';
+import { JobsDTO } from './jobs.types';
 
 export class JobsService {
   private servicePrefix = import.meta.env.VITE_WEBSERVICE_ROUTE + '/jobs';

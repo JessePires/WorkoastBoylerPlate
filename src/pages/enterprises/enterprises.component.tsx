@@ -28,9 +28,11 @@ const EnterprisesPage = (): JSX.Element => {
             <div className="flex justify-between pb-8">
               <h1 className="font-extrabold text-3xl">Empresas</h1>
 
-              <Sheet>
+              <Sheet open={containerProps.isSheetOpen}>
                 <SheetTrigger asChild>
-                  <Button className="bg-pantone-2191C-500">Criar nova Empresa</Button>
+                  <Button className="bg-pantone-2191C-500" onClick={() => containerProps.actions.setIsSheetOpen(true)}>
+                    Criar nova Empresa
+                  </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-2/4 p-4">
                   <Form {...containerProps.form}>

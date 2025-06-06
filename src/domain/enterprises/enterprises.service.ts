@@ -9,10 +9,6 @@ export class EnterprisesService {
   }
 
   public async create(data: EnterprisesDTO): Promise<any> {
-    // return api.post(`${this.servicePrefix}/create`, data);
-
-    console.log('data', data);
-
-    return { data: { data: { enterpriseId: 2 } } };
+    return api.post(`${this.servicePrefix}/create`, data);
   }
 }

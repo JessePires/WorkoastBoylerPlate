@@ -6,24 +6,7 @@ export class EnterprisesController {
   private service = new EnterprisesService();
 
   public async list(): Promise<any> {
-    // return this.service.list();
-
-    return {
-      data: {
-        data: [
-          {
-            id_enterprise: 1,
-            name: 'Workoast',
-            description: 'Workoast',
-          },
-          {
-            id_enterprise: 2,
-            name: 'Coamo',
-            description: 'Coamo Agroindustrial',
-          },
-        ],
-      },
-    };
+    return this.service.list();
   }
 
   public async create(data: EnterprisesDTO): Promise<any> {

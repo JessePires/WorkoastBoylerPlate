@@ -9,13 +9,15 @@ export const EnterprisesContainer = (props: ContainerWithProps<EnterprisesContai
   const enterpriseController = new EnterprisesController();
 
   const [dataSource, setDataSource] = useState<Array<Enterprise>>([]);
+  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
 
   const onCreateEnterprise = async (data: FieldValues): Promise<void> => {
     try {
       const response = await enterpriseController.create(data);
 
-      if (response.data.data.enterpriseId) {
+      if (response.data.enterpriseId) {
         await loadData();
+        clearForm();
       }
     } catch (error: any) {
       if (error.details) {
@@ -32,8 +34,8 @@ export const EnterprisesContainer = (props: ContainerWithProps<EnterprisesContai
     try {
       const response = await enterpriseController.list();
 
-      if (response.data.data) {
-        setDataSource(response.data.data);
+      if (response.data) {
+        setDataSource(response.data);
       }
     } catch (error: any) {
       if (error.details) {
@@ -49,6 +51,7 @@ export const EnterprisesContainer = (props: ContainerWithProps<EnterprisesContai
   const clearForm = (): void => {
     form.clearErrors();
     form.reset();
+    setIsSheetOpen(false);
   };
 
   useEffect(() => {
@@ -58,9 +61,11 @@ export const EnterprisesContainer = (props: ContainerWithProps<EnterprisesContai
   return props.children({
     form,
     dataSource,
+    isSheetOpen,
     actions: {
       onCreateEnterprise,
       clearForm,
+      setIsSheetOpen,
     },
   });
 };
