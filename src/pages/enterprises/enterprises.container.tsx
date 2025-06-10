@@ -5,7 +5,7 @@ import { Enterprise, EnterprisesContainerArgs } from './enterprises.types';
 import { EnterprisesController } from '@/domain/enterprises/enterprises.controller';
 
 export const EnterprisesContainer = (props: ContainerWithProps<EnterprisesContainerArgs>): JSX.Element => {
-  const form = useForm({ defaultValues: { name: '', description: '' } });
+  const form = useForm();
   const enterpriseController = new EnterprisesController();
 
   const [dataSource, setDataSource] = useState<Array<Enterprise>>([]);
@@ -13,7 +13,7 @@ export const EnterprisesContainer = (props: ContainerWithProps<EnterprisesContai
 
   const onCreateEnterprise = async (data: FieldValues): Promise<void> => {
     try {
-      const response = await enterpriseController.create(data);
+      const response = await enterpriseController.create({ description: data.description, name: data.name });
 
       if (response.data.enterpriseId) {
         await loadData();

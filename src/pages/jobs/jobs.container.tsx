@@ -9,7 +9,7 @@ import { Enterprise } from '../enterprises/enterprises.types';
 import { JobsController } from '@/domain/jobs/jobs.controller';
 
 export const JobsContainer = (props: ContainerWithProps<JobsContainerArgs>): JSX.Element => {
-  const form = useForm({ defaultValues: { name: '', description: '' } });
+  const form = useForm();
   const jobsController = new JobsController();
   const enterprisesController = new EnterprisesController();
 
@@ -19,7 +19,11 @@ export const JobsContainer = (props: ContainerWithProps<JobsContainerArgs>): JSX
 
   const onCreateJob = async (data: FieldValues): Promise<void> => {
     try {
-      const response = await jobsController.create(data);
+      const response = await jobsController.create({
+        description: data.description,
+        id_enterprise: data.id_enterprise,
+        name: data.name,
+      });
 
       if (response.data.id) {
         await loadData();
